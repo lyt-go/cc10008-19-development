@@ -5,6 +5,13 @@ import type { ActionResult, EntryRow, ModuleMeta, OverviewResult, PageResult } f
 // 会写进数据的「往回走」动作：命中就把这条记录标成异常态，看板上能一眼看出来。
 const NEGATIVE_ACTIONS = ['撤销', '作废', '拒绝', '驳回', '停用', '忽略', '下线', '回滚']
 
+// 本地时间的分析窗口戳：设备归属调整与群组对比结论落在同一窗口时，设备群组证据按仲裁边界处理。
+function nowStamp(): string {
+  const d = new Date()
+  const p = (n: number) => String(n).padStart(2, '0')
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`
+}
+
 export function moduleMeta(key: string): ModuleMeta {
   const meta = MODULE_BY_KEY.get(key)
   if (!meta) {
@@ -49,6 +56,14 @@ export function runAction(key: string, id: number, action: string): ActionResult
     status: target,
     pending: target !== lastStatus,
     abnormal: NEGATIVE_ACTIONS.some((verb) => action.startsWith(verb)),
+  }
+  // 设备归属调整（确认画像）与群组对比结论（确认结论）各自留下窗口戳，供设备群组证据做版本冲突仲裁。
+  if (key === 'device' && action === '确认画像') {
+    updated['画像确认时间'] = nowStamp()
+  }
+  if (key === 'cohortcmp' && action === '确认结论') {
+    updated['结论确认时间'] = nowStamp()
+    updated['归属版本'] = Number(rows[index]['归属版本'] ?? 0) + 1
   }
   const next = [...rows]
   next[index] = updated

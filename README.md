@@ -53,6 +53,7 @@ npm run build
 | 设备分析 | `device` | 设备画像 | 画像编号、设备类型、操作系统 |
 | 异常检测 | `anomaly` | 检测器 | 检测器编号、监控事件、异常模式 |
 | 群组对比 | `cohortcmp` | 对比任务 | 任务编号、群组A、群组B |
+| 设备群组证据 | `devicegroup` | 设备群组证据 | 证据编号、画像编号、任务编号 |
 | 漏斗诊断 | `funnel` | 诊断报告 | 报告编号、漏斗名称、步骤定义 |
 | 浏览深度 | `scrollmap` | 深度分析 | 分析编号、页面名称、首屏占比 |
 | 表单分析 | `formfield` | 表单诊断 | 诊断编号、表单名称、总字段数 |
@@ -68,6 +69,9 @@ npm run build
 - 字段、状态、动作与流转目标集中在 `frontend/src/data/modules.ts`；示例数据在
   `frontend/src/data/seed.ts`。
 - 状态流转只允许在 `local-service.ts` 里改，页面组件不做业务判断。
+- 设备群组证据的跨模块编排（生成差异数据报告、归属冲突拦截、仲裁边界、核对复验、复核数据清单）
+  收在 `frontend/src/api/device-group-service.ts`：读取设备画像与对比任务到同一口径，生成的
+  设备群组差异数据报告会回写设备侧「行为差异报告」与群组对比侧「结论描述」，复核数据清单随之更新。
 - 想回到初始数据：清掉浏览器里 `behavior-event-trace-hub:entries` 这一项，或调用 `resetModule(模块)`。
 
 领域：数据工程

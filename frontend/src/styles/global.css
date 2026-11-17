@@ -35,3 +35,14 @@ body { margin: 0; background: #f6f8fb; color: #1f2937; }
 .error-text { color: #b42318; }
 .status-legend { display: flex; flex-wrap: wrap; gap: 12px; margin: 0 0 10px; font-size: 12px; color: var(--muted); }
 .legend-item { background: #eef2f7; border-radius: 999px; padding: 2px 10px; }
+.filter-item select { border: 1px solid var(--border); border-radius: 6px; padding: 4px 8px; background: #fff; }
+.notice-text { color: #067647; }
+.review-sheet { margin-top: 16px; }
+.review-sheet h3 { margin: 0 0 4px; font-size: 14px; }
+.verify-panel { margin-top: 12px; background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; }
+.verify-panel.failed { border-color: #f1b8b2; }
+.verify-panel h3 { margin: 0 0 6px; font-size: 14px; }
+.verify-summary { margin: 0 0 8px; font-size: 13px; }
+.verify-list { margin: 0; padding: 0; list-style: none; font-size: 13px; display: flex; flex-direction: column; gap: 4px; }
+.verify-pass { color: #067647; margin-right: 6px; }
+.verify-fail { color: #b42318; margin-right: 6px; }

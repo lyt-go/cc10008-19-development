@@ -63,6 +63,26 @@
       </tbody>
     </table>
 
+    <section class="review-sheet">
+      <h3>复核数据清单（随设备群组差异数据报告更新）</h3>
+      <p class="page-desc">从设备画像读到设备行为差异报告，跨模块衔接设备群组差异，对比结论与设备侧读取同一口径。</p>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th v-for="column in reviewColumns" :key="column">{{ column }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="row in reviewRows" :key="row.证据编号">
+            <td v-for="column in reviewColumns" :key="column">{{ row[column] }}</td>
+          </tr>
+          <tr v-if="!reviewRows.length">
+            <td :colspan="reviewColumns.length" class="empty-state">暂无已生成的设备群组差异数据报告，可先在设备群组证据中生成</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
     <footer class="page-foot">
       <span>共 {{ total }} 条群组对比记录</span>
       <span v-if="errorMessage" class="error-text">{{ errorMessage }}</span>
@@ -73,25 +93,28 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 
+import { listReviewSheet } from '@/api/device-group-service'
 import {
   downloadEntries,
   listEntries,
   moduleMeta,
   runAction as applyAction,
 } from '@/api/local-service'
-import type { EntryRow } from '@/data/types'
+import type { EntryRow, ReviewSheetRow } from '@/data/types'
 
 const meta = moduleMeta('cohortcmp')
 const columns = ["任务编号", "群组A", "群组B", "对比维度", "时间对齐方式", "统计检验", "效应值", "结论描述"]
 const actions = ["启动对比", "确认结论", "归档结论"]
 const statuses = ["草稿", "对比计算中", "已确认", "已归档"]
 const stats = [{"label": "对比任务总数", "value": 0}, {"label": "已确认任务", "value": 0}, {"label": "计算中任务", "value": 0}]
+const reviewColumns = ["证据编号", "任务编号", "画像编号", "设备类型", "用户占比", "效应值", "行为差异报告", "差异数据报告", "仲裁边界"] as const
 
 const rows = ref<EntryRow[]>([])
 const total = ref(0)
 const errorMessage = ref('')
 const filters = ref<Record<string, string>>({})
 const filterFields = columns.slice(0, 3)
+const reviewRows = ref<ReviewSheetRow[]>([])
 const statusSummary = computed(() =>
   statuses.map((status: string) => ({
     status,
@@ -128,6 +151,7 @@ function reload() {
     const payload = listEntries(meta.key, filters.value)
     rows.value = payload.items
     total.value = payload.total
+    reviewRows.value = listReviewSheet()
   } catch (error) {
     errorMessage.value = error instanceof Error ? error.message : '群组对比列表读取失败'
   }

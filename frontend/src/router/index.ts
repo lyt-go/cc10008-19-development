@@ -12,6 +12,7 @@ const Timewindow = () => import('@/views/timewindow/index.vue')
 const Device = () => import('@/views/device/index.vue')
 const Anomaly = () => import('@/views/anomaly/index.vue')
 const Cohortcmp = () => import('@/views/cohortcmp/index.vue')
+const Devicegroup = () => import('@/views/devicegroup/index.vue')
 const Funnel = () => import('@/views/funnel/index.vue')
 const Scrollmap = () => import('@/views/scrollmap/index.vue')
 const Formfield = () => import('@/views/formfield/index.vue')
@@ -35,6 +36,7 @@ const router = createRouter({
     { path: '/device', name: 'device', component: Device },
     { path: '/anomaly', name: 'anomaly', component: Anomaly },
     { path: '/cohortcmp', name: 'cohortcmp', component: Cohortcmp },
+    { path: '/devicegroup', name: 'devicegroup', component: Devicegroup },
     { path: '/funnel', name: 'funnel', component: Funnel },
     { path: '/scrollmap', name: 'scrollmap', component: Scrollmap },
     { path: '/formfield', name: 'formfield', component: Formfield },
